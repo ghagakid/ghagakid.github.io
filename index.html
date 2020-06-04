@@ -50,6 +50,22 @@
 
   var streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
 
+var cities = L.layerGroup ()
+var LeafIcon = L.Icon.extend({
+    options: {
+      iconSize:     [20, 25],
+     
+    }
+  });
+
+  var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
+    redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
+    orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
+
+  L.marker([-7.351, 113.081], {icon: greenIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(cities);
+  L.marker([-6.059, 106.837], {icon: redIcon}).bindPopup("Jakarta Mendung").addTo(cities);
+  L.marker([-7.006, 109.707], {icon: redIcon}).bindPopup("Jawa Tengah Mendung").addTo(cities);
+
 var cities2 = L.layerGroup ()
 
 function popUp(f,l){
@@ -67,25 +83,10 @@ var jsonTest = new L.GeoJSON.AJAX(["geojson/angin.geojson"],{onEachFeature:popUp
  var map = L.map('map', {
     center: [-4.884, 114.571],
     zoom: 5,
-    layers: [basemap,cities2]
+    layers: [basemap,cities]
   });
 
 
-var cities = L.layerGroup ()
-var LeafIcon = L.Icon.extend({
-    options: {
-      iconSize:     [20, 25],
-     
-    }
-  });
-
-  var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
-    redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
-    orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
-
-  L.marker([-7.351, 113.081], {icon: greenIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(cities);
-  L.marker([-6.059, 106.837], {icon: redIcon}).bindPopup("Jakarta Mendung").addTo(cities);
-  L.marker([-7.006, 109.707], {icon: redIcon}).bindPopup("Jawa Tengah Mendung").addTo(cities);
 
 
 
