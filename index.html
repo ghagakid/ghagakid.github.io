@@ -22,6 +22,7 @@
     <link href='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css' rel='stylesheet' />
     
     
+
     <style type="text/css">
       #map { height: 100vh; }
     </style>
@@ -36,6 +37,8 @@
 
     <script>
     
+
+
     var basemap = L.layerGroup ()
      L.tileLayer.bing('AjCBdlgYMnn8qzIWOBq7UG1taybeub9E75_hcr4te1mvhe_rxX756DcKhMimsjmX').addTo(basemap)
 
@@ -48,6 +51,8 @@
   var streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
 
 
+
+
  var map = L.map('map', {
     center: [-4.884, 114.571],
     zoom: 5,
@@ -55,13 +60,36 @@
   });
 
 
+
+
+
+
+
+var LeafIcon = L.Icon.extend({
+    options: {
+      iconSize:     [20, 25],
+     
+    }
+  });
+
+  var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
+    redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
+    orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
+
+  L.marker([-7.351, 113.081], {icon: greenIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(map);
+  L.marker([-6.059, 106.837], {icon: redIcon}).bindPopup("Jakarta Mendung").addTo(map);
+
+
+
 var baseLayers = {
     "Satellite": basemap,
-    "Road": streets
+    "Road": streets,
+    
   };
 
 
 
+  
   L.control.layers(baseLayers).addTo(map);
     
   L.control.scale().addTo(map);
