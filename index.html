@@ -7,11 +7,12 @@
     <meta charset=utf-8 />
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
     
-    <script src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js'></script>
-    <script src='https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise'></script>
-    <script src='js/leaflet-bing-layer.js'></script>
-    <link href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css' rel='stylesheet' />
-    <style>
+    <script src='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js'></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+    <script src="js/leaflet-bing-layer.js"></script>
+    <link href='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css' rel='stylesheet' />
+    
+       <style>
     body {
         margin: 0;
         padding: 0;
@@ -29,11 +30,40 @@
     <div id='map'></div>
 
     <script>
-    var map = L.map('map').setView([-4.884, 114.571], 5)
-    L.tileLayer.bing('AjCBdlgYMnn8qzIWOBq7UG1taybeub9E75_hcr4te1mvhe_rxX756DcKhMimsjmX').addTo(map)
+    
+    var basemap = L.layerGroup ()
+     L.tileLayer.bing('AjCBdlgYMnn8qzIWOBq7UG1taybeub9E75_hcr4te1mvhe_rxX756DcKhMimsjmX').addTo(basemap)
+     
 
 
-    L.control.scale().addTo(map);
+        
+  var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+
+  var streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+
+
+ var map = L.map('map', {
+    center: [-4.884, 114.571],
+    zoom: 5,
+    layers: [basemap]
+  });
+
+
+var baseLayers = {
+    "Satellite": basemap,
+    "Road": streets
+  };
+
+
+
+  L.control.layers(baseLayers).addTo(map);
+    
+  L.control.scale().addTo(map);
     </script>
+
+   
 </body>
 </html>
