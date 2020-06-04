@@ -31,11 +31,11 @@
 <body>
 
    <body>
-       
+       <script src="js/leaflet.ajax.js"></script>
 
-    <div id='map'></div>
+         <div id='map'></div>
 
-    <script>
+        <script>
     
 
 
@@ -50,21 +50,28 @@
 
   var streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
 
+var cities2 = L.layerGroup ()
 
+function popUp(f,l){
+    var out = [];
+    if (f.properties){
+        for(key in f.properties){
+            out.push(key+": "+f.properties[key]);
+        }
+        l.bindPopup(out.join("<br />"));
+    }
+}
+var jsonTest = new L.GeoJSON.AJAX(["geojson/angin.geojson"],{onEachFeature:popUp}).addTo(cities2);
 
 
  var map = L.map('map', {
     center: [-4.884, 114.571],
     zoom: 5,
-    layers: [basemap]
+    layers: [basemap,cities2]
   });
 
 
-
-
-
-
-
+var cities = L.layerGroup ()
 var LeafIcon = L.Icon.extend({
     options: {
       iconSize:     [20, 25],
@@ -76,8 +83,9 @@ var LeafIcon = L.Icon.extend({
     redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
     orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
 
-  L.marker([-7.351, 113.081], {icon: greenIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(map);
-  L.marker([-6.059, 106.837], {icon: redIcon}).bindPopup("Jakarta Mendung").addTo(map);
+  L.marker([-7.351, 113.081], {icon: greenIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(cities);
+  L.marker([-6.059, 106.837], {icon: redIcon}).bindPopup("Jakarta Mendung").addTo(cities);
+  L.marker([-7.006, 109.707], {icon: redIcon}).bindPopup("Jawa Tengah Mendung").addTo(cities);
 
 
 
@@ -85,12 +93,18 @@ var baseLayers = {
     "Satellite": basemap,
     "Road": streets,
     
+    
   };
 
+var overlays = {
+    "Angin": cities2,
+    "Hujan": cities,
 
+    
+  };
 
   
-  L.control.layers(baseLayers).addTo(map);
+  L.control.layers(baseLayers,overlays).addTo(map);
     
   L.control.scale().addTo(map);
     </script>
