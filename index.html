@@ -88,11 +88,11 @@ var jsonTest = new L.GeoJSON.AJAX(["geojson/angin.geojson"],{onEachFeature:popUp
 	
 	var animasi = L.layerGroup ()
 
-	var videoUrls = [
+	var videoUrl = [
         'hujan1.mp4'
     ];
          var videoBounds = [[ 6.2, 94.8], [-11.2, 142.4]];
-         var overlay = L.videoOverlay(videoUrls, videoBounds);
+         var overlay = L.videoOverlay(videoUrl, videoBounds);
          overlay.addTo(animasi);
 
 
