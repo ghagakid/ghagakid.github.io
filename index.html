@@ -7,10 +7,13 @@
     
 	 <meta charset=utf-8 />
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />	
-	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />  
-    <link href='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css' rel='stylesheet' />
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
     <script src='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js'></script>
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+    
+    <link href='http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css' rel='stylesheet' />
+    
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
    crossorigin=""/>
@@ -22,56 +25,46 @@
 	<script src="js/leaflet-bing-layer.js"></script>
     <style type="text/css">
       #map { height: 100vh; }
+
     </style>
-</head>
+	</head>
 
-<body>
-
+	<body>
    
        <script src="js/leaflet.ajax.js"></script>
-
-         <div id='map'></div>
+       <div id='map'></div>
 
         <script>
-    
-
    
     var basemap = L.layerGroup ()
      L.tileLayer.bing('AjCBdlgYMnn8qzIWOBq7UG1taybeub9E75_hcr4te1mvhe_rxX756DcKhMimsjmX').addTo(basemap)
-
-        
-  var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+       
+  	var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
-
     var streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
 
- 
-	
-
-
-
-var cities = L.layerGroup ()
-var LeafIcon = L.Icon.extend({
+ 	var cities = L.layerGroup ()
+	var LeafIcon = L.Icon.extend({
     options: {
       iconSize:     [20, 25],
      
     }
   });
 
-  var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
+  	var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
     redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
     orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
 
-  L.marker([-7.50, 113.01], {icon: redIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(cities);
-  L.marker([-6.05, 106.81], {icon: greenIcon}).bindPopup("Jakarta Mendung").addTo(cities);
-  L.marker([-6.80, 109.63], {icon: redIcon}).bindPopup("Jawa Tengah Mendung").addTo(cities);
+  	L.marker([-7.50, 113.01], {icon: redIcon}).bindPopup("Jawa Timur Hujan Deras").addTo(cities);
+  	L.marker([-6.05, 106.81], {icon: greenIcon}).bindPopup("Jakarta Mendung").addTo(cities);
+  	L.marker([-6.80, 109.63], {icon: redIcon}).bindPopup("Jawa Tengah Mendung").addTo(cities);
 
-var cities2 = L.layerGroup ()
+	var cities2 = L.layerGroup ()
 
-function popUp(f,l){
+	function popUp(f,l){
     var out = [];
     if (f.properties){
         for(key in f.properties){
@@ -79,54 +72,70 @@ function popUp(f,l){
         }
         l.bindPopup(out.join("<br />"));
     }
-}
-var jsonTest = new L.GeoJSON.AJAX(["geojson/angin.geojson"],{onEachFeature:popUp}).addTo(cities2);
+	}
+	var jsonTest = new L.GeoJSON.AJAX(["geojson/angin.geojson"],{onEachFeature:popUp}).addTo(cities2);
 
 	
 	var animasi = L.layerGroup ()
 
-	var videoUrl = [
+	var videoUrls = [
         'hujan1.mp4'
     ];
-         var videoBounds = [[ 6, 94], [-11, 142]];
-         var overlay = L.videoOverlay(videoUrl, videoBounds);
+         var videoBounds = [[ 6.2, 94.8], [-11.2, 142.4]];
+         var overlay = L.videoOverlay(videoUrls, videoBounds);
          overlay.addTo(animasi);
 
 
+	overlay.on('load', function () {
+		var MyPauseControl = L.Control.extend({
+			onAdd: function() {
+				var button = L.DomUtil.create('button');
+				button.innerHTML = '⏸';
+				L.DomEvent.on(button, 'click', function () {
+					overlay.getElement().pause();
+				});
+				return button;
+			}
+		});
+		var MyPlayControl = L.Control.extend({
+			onAdd: function() {
+				var button = L.DomUtil.create('button');
+				button.innerHTML = '▶️';
+				L.DomEvent.on(button, 'click', function () {
+					overlay.getElement().play();
+				});
+				return button;
+			}
+		});
+
+		var pauseControl = (new MyPauseControl()).addTo(map);
+		var playControl = (new MyPlayControl()).addTo(map);
+	});
+
 	
 
- var map = L.map('map', {
+ 	var map = L.map('map', {
     center: [-3.51, 119.66],
-    zoom: 4,
-    layers: [streets,animasi]
+    zoom: 5,
+    layers: [streets,animasi,cities]
   });
 
 
-var baseLayers = {
+	var baseLayers = {
     "Satellite": basemap,
     "Road": streets,
-    
-    
-  };
+     };
 
-var overlays = {
+	var overlays = {
     "Angin": cities2,
     "Titik Hujan Hari Ini": cities,
     "Pergerakan Hujan": animasi,
-   
-
-    
-  };
+      };
 
   
-  L.control.layers(baseLayers,overlays).addTo(map);
-    
-  L.control.scale().addTo(map);
-
-
+  	L.control.layers(baseLayers,overlays).addTo(map);
+    L.control.scale().addTo(map);
 
     </script>
- 
-   
-</body>
+	</body>
 </html>
